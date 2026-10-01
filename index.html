@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" data-page-node-id="UBmdcnuvmvOMh8tIbjph1L">
+<head data-page-node-id="3iWXtzV4m6W8y3NiX57NWW">
+  <meta charset="UTF-8" data-page-node-id="nCaYDJTjxh3sIErYfQxPKL">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="cMXDGpeVYYus1HpeL6JTvA">
+  <title>Weak-Reference Structural Distortion Evaluation for SLAM Point Cloud Maps</title>
+  <style>
+    :root {
+      --link: #3273dc;
+      --text: #363636;
+      --muted: #4a4a4a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+    header {
+      text-align: center;
+      padding: 56px 0 6px;
+    }
+    header h1 {
+      font-size: 1.8rem;
+      line-height: 1.35;
+      margin: 0 0 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .authors {
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
+    .authors span { margin: 0 0.6em; white-space: nowrap; }
+    .authors a { color: var(--link); text-decoration: none; }
+    .authors a:hover { text-decoration: underline; }
+    sup { font-size: 0.7em; }
+    .affiliations {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 26px;
+    }
+    .buttons { margin: 4px 0 10px; }
+    .button {
+      display: inline-block;
+      margin: 0 5px 8px;
+      padding: 5px 16px;
+      border: 1px solid #dbdbdb;
+      border-radius: 6px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      background: #fff;
+      transition: border-color .15s ease;
+    }
+    .button:hover { border-color: #9a9a9a; }
+    .button .icon { margin-right: 6px; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e8e8e8;
+      margin: 34px 0 0;
+    }
+
+    /* section headings */
+    .section {
+      margin: 56px 0 0;
+    }
+    .section h2 {
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0 0 24px;
+    }
+    .section h2::after {
+      content: "";
+      display: block;
+      width: 44px;
+      height: 2px;
+      background: #c9c9c9;
+      margin: 8px auto 0;
+    }
+
+    .block { margin: 32px 0 0; }
+
+    /* figure cards */
+    .card {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 12px;
+      transition: box-shadow .18s ease, border-color .18s ease;
+    }
+    .card:hover {
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+      border-color: #d5d5d5;
+    }
+    .card img.full { width: 100%; height: auto; display: block; border-radius: 3px; }
+
+    .caption {
+      font-size: 0.88rem;
+      color: var(--muted);
+      text-align: center;
+      margin: 10px auto 0;
+      max-width: 96%;
+      line-height: 1.55;
+    }
+    .caption b { color: var(--text); }
+    .sublabel {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 6px 0 0;
+    }
+
+    .two-col { display: flex; gap: 16px; align-items: stretch; }
+    .two-col > div { flex: 1; }
+    .two-col .card { flex: 1; display: flex; flex-direction: column; }
+    .two-col .card img { flex: 0 0 auto; }
+
+    .three-col { display: flex; gap: 14px; align-items: stretch; }
+    .three-col > div { flex: 1; }
+
+    table {
+      border-collapse: collapse;
+      margin: 14px auto 4px;
+      font-size: 0.9rem;
+      width: auto;
+      max-width: 100%;
+    }
+    th, td {
+      padding: 6px 12px;
+      text-align: center;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    thead th {
+      border-bottom: 2px solid #444;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    tbody tr:last-child td { border-bottom: 2px solid #444; }
+    td.left, th.left { text-align: left; }
+    .table-note {
+      font-size: 0.88rem;
+      color: var(--muted);
+      text-align: center;
+      margin: 8px auto 0;
+      max-width: 96%;
+      line-height: 1.55;
+    }
+    .table-note b { color: var(--text); }
+    .table-wrap { overflow-x: auto; }
+
+    .map-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .map-grid figure { margin: 0; }
+    .map-grid img { width: 100%; display: block; border-radius: 3px; }
+    .map-grid figcaption {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 5px;
+    }
+
+    /* qualitative: one column per sequence, overlay over heatmap */
+    .qual-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+    .qual-col { margin: 0; }
+    .qual-col .seq-name {
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .qual-col img { width: 100%; display: block; border-radius: 3px; }
+    .qual-col img + img { margin-top: 8px; }
+    .qual-col .img-tag {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      margin: 4px 0 0;
+    }
+
+    .bibtex {
+      background: #f6f8fa;
+      border-radius: 6px;
+      padding: 16px 20px;
+      font-family: 'Consolas', 'Menlo', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.55;
+    }
+    @media (max-width: 700px) {
+      .two-col, .three-col, .qual-grid { flex-direction: column; grid-template-columns: 1fr; }
+      .map-grid { grid-template-columns: 1fr; }
+      header h1 { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body data-page-node-id="eDrrURie2kBFzs9biUNs4O">
+
+<div class="container" data-page-node-id="fmG40NwCGOldT8GucsFsZ1">
+
+  <header data-page-node-id="qssN70st5RBbN4O92cmUjD">
+    <h1 data-page-node-id="gbjkt6lvSTMqoYtqB6YoEN">Weak-Reference Structural Distortion Evaluation for SLAM Point Cloud Maps via Satellite-Guided Local Scale Analysis</h1>
+
+    <div class="authors" data-page-node-id="9hzQpQ4ysKfXHf5uq1xPl8">
+      <span data-page-node-id="DuBvUzVHQb8FgJkCyBjTNz"><a href="mailto:" data-page-node-id="4hRxs8b8cArpGt6o7ZIGOB">Yunfei Ma</a><sup data-page-node-id="fZfX90QUkVmHhC0GRADJHR">1</sup></span>
+      <span data-page-node-id="X9o9HC7ldoa2IErLnFdqES"><a href="mailto:jcheng@wtu.edu.cn" data-page-node-id="ECeAsbndJ7yA9LCEmJlkAM">Jun Cheng</a><sup data-page-node-id="gVFkb6zibSIIystV0ZCEgo">1,2</sup></span>
+    </div>
+
+    <div class="affiliations" data-page-node-id="nohy0EgQ1C2ybA6C9XBHPv">
+      <sup data-page-node-id="R0EzbnTeNHO8LIEYtycU7q">1</sup>Wuhan Textile University &nbsp;&nbsp; <sup data-page-node-id="H4jl2Gx5xospa9aJabREIF">2</sup>Wuhan University of Technology
+    </div>
+
+    <div class="buttons">
+      <a class="button" href="#"><span class="icon">&#128230;</span>Dataset</a>
+      <a class="button" href="#"><span class="icon">&#128187;</span>Code</a>
+      <!-- 数据集/代码链接就绪后，把上面 href="#" 换成对应网址即可 -->
+    </div>
+  </header>
+
+  <!-- ===================== Teaser ===================== -->
+  <div class="block" data-page-node-id="Ss7qMFUZL2dUIqPA3bsh1X">
+    <div class="two-col" data-page-node-id="EYbDhotjslMzZWJPWCN7jq">
+      <div class="card" data-page-node-id="gZ0dQwLYATKhGItZUzNc46">
+        <img class="full" src="static/images/fig1a_problems.jpg?v=4" alt="Case 1 and Case 2" data-page-node-id="WFOYLor2VvZ3vzUBI45eaH">
+        <p class="sublabel" data-page-node-id="uWmK9OncqApSAjxRBn51yC"><b data-page-node-id="I6tgSMPkZNV155cmOdmyHg">(a)</b></p>
+      </div>
+      <div class="card" data-page-node-id="nYJxG485VrHmOx0HDwgr2j">
+        <img class="full" src="static/images/fig1b_problems.jpg?v=4" alt="GT unavailable in large areas" data-page-node-id="UIDpkRQBrPqrOL353b8yfw">
+        <p class="sublabel" data-page-node-id="XLJmoXZe9xyUs8r5RH7Sxn"><b data-page-node-id="sKsdtHUr4QRHUYGKQNrvnH">(b)</b></p>
+      </div>
+    </div>
+    <p class="caption" data-page-node-id="Jx3i6bAT9QuSEWzEkVH3UJ"><b data-page-node-id="XFaMhV8woPzw875FZx9kGC">Figure 1.</b> The existing problems in SLAM evaluation: (a) map quality is unrelated to trajectory accuracy (Case 1 vs. Case 2); (b) accurate ground truth is difficult or impossible to obtain in large-scale or open scenarios.</p>
+  </div>
+
+  <!-- ===================== Method ===================== -->
+  <div class="section" data-page-node-id="y7HeszpZt9kNM9rt5rkepn">
+    <h2 data-page-node-id="B2NSFNhWwQkqmEzB32jo6X">Method</h2>
+
+    <div class="block" data-page-node-id="QAci2rH0DYm29pZYm7MOSC">
+      <div class="card" data-page-node-id="5uV3itVEDe337mCgRGt9Nv">
+        <img class="full" src="static/images/pipeline.png" alt="MLSD evaluation pipeline" data-page-node-id="jjtCDvphAkqDlbAfkrCtyI">
+      </div>
+      <p class="caption" data-page-node-id="n5lWvsY6DFiX3DKL5KVhUK"><b data-page-node-id="7dCWWX24rDnnvxuRvBGSQH">Figure 2.</b> The MLSD evaluation pipeline: BEV projection, satellite-guided alignment, and local scale deviation computation.</p>
+    </div>
+  </div>
+
+  <!-- ===================== Dataset ===================== -->
+  <div class="section" data-page-node-id="hhYula2K5VSqmZtIXqJCpJ">
+    <h2 data-page-node-id="bP0srQtYjhOqXDN2H4VnnQ">Dataset</h2>
+
+    <div class="block">
+      <div class="card">
+        <img class="full" src="static/images/fig3_acquisition.jpg?v=2" alt="Data acquisition: Campus, Device, Road">
+      </div>
+      <p class="caption"><b>Figure 3.</b> Data acquisition: hand-held Livox HAP mounted on an e-bike, covering the Campus and Road sequences.</p>
+    </div>
+
+    <div class="block" data-page-node-id="Gjlm6d9AAJixeXXHjG2Ecy">
+      <div class="map-grid" data-page-node-id="EmjHLj2jKuDbC6k0jVH3H3">
+        <figure class="card" data-page-node-id="azXgYBGJvOZ5qaXCC8edcd"><img src="static/images/map_campus_local_livox.jpg" alt="Campus local, Livox Mapping" data-page-node-id="4tOZaPBEDff0dVNXum0gup"><figcaption data-page-node-id="NZ0q9zoIaZg7rbR8mqY75g">(a) Campus, local (Livox Mapping)</figcaption></figure>
+        <figure class="card" data-page-node-id="LpzbBAFrOsSykftWcrCoV9"><img src="static/images/map_campus_global_livox.jpg" alt="Campus global, Livox Mapping" data-page-node-id="EYEdYEukkpyX8BqBHcAMWd"><figcaption data-page-node-id="kPVkg9QD2f0h9BWX7Atcgk">(b) Campus, global (Livox Mapping)</figcaption></figure>
+        <figure class="card" data-page-node-id="tUhfMgc7sdNVqbbztuqaWK"><img src="static/images/map_campus_local_dlo.jpg" alt="Campus local, DLO" data-page-node-id="9wuWYlXOTD7CwsW4TXVqBY"><figcaption data-page-node-id="P9nbfqALNtidT8QvA6zjWd">(c) Campus, local (DLO)</figcaption></figure>
+        <figure class="card" data-page-node-id="KoAIlzbDMbgWCAO7cdXnSH"><img src="static/images/map_campus_global_dlo.jpg" alt="Campus global, DLO" data-page-node-id="RQHIEXAub472Ez5nKgJgur"><figcaption data-page-node-id="v1WJHobiep6dWzaeUXYjWs">(d) Campus, global (DLO)</figcaption></figure>
+        <figure class="card" data-page-node-id="cS7DDCe974jwhPmABjWazD"><img src="static/images/map_road_local_livox.jpg" alt="Road local, Livox Mapping" data-page-node-id="fDSQjc1C5Ila3wGHe1Xjpb"><figcaption data-page-node-id="NvYfZs4MTViPIUjGSJOFsG">(e) Road, local (Livox Mapping)</figcaption></figure>
+        <figure class="card" data-page-node-id="nJPwXNN5oI62EC75ayiAOr"><img src="static/images/map_road_global_livox.jpg" alt="Road global, Livox Mapping" data-page-node-id="oJezHf71fQLGmhqVU27LsV"><figcaption data-page-node-id="kU3INNWhbSTsGcUbeugWUK">(f) Road, global (Livox Mapping)</figcaption></figure>
+        <figure class="card" data-page-node-id="g0hhx5qAcwiOmzCE7wrOMl"><img src="static/images/map_road_local_dlo.jpg" alt="Road local, DLO" data-page-node-id="TKrAYHenicT3DKDuhQxJSX"><figcaption data-page-node-id="uPdBUAaqYzY5xbm2nMzPdJ">(g) Road, local (DLO)</figcaption></figure>
+        <figure class="card" data-page-node-id="Qen8zYbuPUIhCrCpd7jLgB"><img src="static/images/map_road_global_dlo.jpg" alt="Road global, DLO" data-page-node-id="61qMD98fXvnICRRP2j4BKj"><figcaption data-page-node-id="IjviMBLq8aHFaYxfQVekTp">(h) Road, global (DLO)</figcaption></figure>
+      </div>
+      <p class="caption" data-page-node-id="jFUFtJ0fqaBVp317FaBQsf"><b data-page-node-id="pMr7ubkBIrvKsgtDbFMrAX">Figure 4.</b> Local maps preserve fine structure, while global maps accumulate scale inconsistency and structural drift.</p>
+    </div>
+  </div>
+
+  <!-- ===================== Results (figures) ===================== -->
+  <div class="section" data-page-node-id="DNFJtKL6FICSxDfw3DRfwt">
+    <h2 data-page-node-id="TyDLXDlJEq8Vau4DDzwBrH">Results</h2>
+
+    <div class="block" data-page-node-id="SSfy40kaGwH7OGlHRrzMaD">
+      <div class="qual-grid" data-page-node-id="FR93JKVCrr4OQz9WCqyASn">
+        <div class="qual-col" data-page-node-id="1cT9R6Rgv0mLJt6wse67cl">
+          <p class="seq-name" data-page-node-id="x9EaKyFFKkOeZDJn6hGCDT">Backpack2025 Seq.2</p>
+          <img src="static/images/qual_overlay_backpack.jpg" alt="Overlay, Backpack" data-page-node-id="jP3umAesQZjKzcdhShrZ9D">
+          <p class="img-tag" data-page-node-id="40ITH2NSamgIt5XKIhd4Ne">Overlay</p>
+          <img src="static/images/qual_heat_backpack.jpg" alt="Heatmap, Backpack" data-page-node-id="ILIvWdx9DZTjyfbzbRTj5K">
+          <p class="img-tag" data-page-node-id="31JKXetGHB5fd5a5QpjqBW">Distortion field</p>
+        </div>
+        <div class="qual-col" data-page-node-id="lIVfNHFYaAAbSF12CztzfQ">
+          <p class="seq-name" data-page-node-id="EXyci05qOB1VGPpgPg37OM">Campus</p>
+          <img src="static/images/qual_overlay_campus.jpg" alt="Overlay, Campus" data-page-node-id="MXK9gEkniv7kzw2anbJDcK">
+          <p class="img-tag" data-page-node-id="9BJcLpDyO7uufL0HQ7vTi9">Overlay</p>
+          <img src="static/images/qual_heat_campus.jpg" alt="Heatmap, Campus" data-page-node-id="vyffIk3UFzyqrYQ0f3h7xk">
+          <p class="img-tag" data-page-node-id="C8KOlAAVr7dSQRpQzIpFwi">Distortion field</p>
+        </div>
+        <div class="qual-col" data-page-node-id="8sMoYc0YamGxP5jIwfbAEP">
+          <p class="seq-name" data-page-node-id="FC4H8bk3yUHnKJeHz1vuXS">Road</p>
+          <img src="static/images/qual_overlay_road.jpg" alt="Overlay, Road" data-page-node-id="XvDUgIUMAhZfo8OxW2rZnp">
+          <p class="img-tag" data-page-node-id="qcmQoZg2yImpHaKfWTj60N">Overlay</p>
+          <img src="static/images/qual_heat_road.jpg" alt="Heatmap, Road" data-page-node-id="kUIApFuaqEARUXjzOcqYZa">
+          <p class="img-tag" data-page-node-id="Bv0tL5i9byzZz9Dlwe2Ea8">Distortion field</p>
+        </div>
+      </div>
+      <p class="caption" data-page-node-id="OWlRg9AWNqB0C5S6mjpUiM"><b data-page-node-id="c5Mb8zSFUxH7ESNaLXkGtM">Figure 5.</b> Alignment overlays (top) and local distortion fields d(x) (bottom) for the three sequences. Warmer colors indicate larger local deviation from the similarity transform.</p>
+    </div>
+
+    <div class="block" data-page-node-id="wF67NXSVHnEpOk849wjX4b">
+      <div class="card" data-page-node-id="LhRj34LLKZlZC4B56M5qK5">
+        <img class="full" src="static/images/fig11_complementarity.jpg" alt="Complementarity between MLSD and conventional metrics" data-page-node-id="vTGE7PWyVf9cBeORrUX4OD">
+      </div>
+      <p class="caption" data-page-node-id="fUYHkrOLxRpiuQoabXF0RB"><b data-page-node-id="rzu8OgCU1Y7UgDWbV5s7nJ">Figure 6.</b> MLSD vs. conventional metrics: (a) APE, (b) CD, (c) AWD. No simple monotonic relation indicates complementary structural information.</p>
+    </div>
+  </div>
+
+  <!-- ===================== Quantitative results (tables) ===================== -->
+  <div class="section" data-page-node-id="er86BrDusl7ZcLYwgRR2Qo">
+    <h2 data-page-node-id="TymHzfmwggqTz4DwHXs1rn">Quantitative Results</h2>
+
+    <div class="block table-wrap" data-page-node-id="L2iISN6YYLCnyGUcfEpz4V">
+      <table data-page-node-id="zqfTHHX6ydDd7XF7iiS67R">
+        <thead data-page-node-id="XjLh7Qq3flFtrgdAKENm10">
+          <tr data-page-node-id="xFdo877gkDVf1EsND0eH0N"><th data-page-node-id="dcyCUHD87do8aAVMnELiR6">Sequence</th><th data-page-node-id="neApVIv4IwxTx8B0jTBYNN">SLAM method</th><th data-page-node-id="ioHVsCJlFTF4JPU14HOv5j">APE &darr;</th><th data-page-node-id="Ktv67XPqKlQH7uvgNMQO0i">RPE &darr;</th><th data-page-node-id="b2M1iyIafTbwyRPvXJJVpb">CD &darr;</th><th data-page-node-id="1xXNqFDGNnX0k0MKMIObx6">AWD &darr;</th><th data-page-node-id="YlSQCAeZ9sljQwcqR3Rhh6">SCS &darr;</th><th data-page-node-id="81zi53MeGY33rW0xJphcZh">MLSD &darr;</th></tr>
+        </thead>
+        <tbody data-page-node-id="w4bBB1j6lokg6dkJQa9Dug">
+          <tr data-page-node-id="1zFBBaWlu54ecNeQl6o3GN"><td rowspan="2" data-page-node-id="P4Cv0hEFznnHmTsUm9CS0s">Seq.2</td><td data-page-node-id="Mlb6zTiRMauG1mgW9Battg">DLO</td><td data-page-node-id="Izc8T8gjvjwqRGk0CfJ7A5">3.20</td><td data-page-node-id="F8V9AJmW5qbJGFS95AYo5N">0.05</td><td data-page-node-id="n1ozLlCJGdiByIJIsg8yIo">&ndash;</td><td data-page-node-id="IG5psRE2WN6RTqvvbOqew1">&ndash;</td><td data-page-node-id="aoqCHLFegI7tkIEFbUYrrj">&ndash;</td><td data-page-node-id="E76VHOQ7eE3kGz5ZK9gr27"><b data-page-node-id="kAUNqiQbuKCJcxawn3LD4z">0.026</b></td></tr>
+          <tr data-page-node-id="xb0iLt77LQpsZHyFEMZOaj"><td data-page-node-id="gRtXd4RlDZpbYNdWHgrlzv">Livox Mapping</td><td data-page-node-id="9JSwsdl6RU53mnheHc1wEv">&ndash;</td><td data-page-node-id="CFu1YEg12FsXl4OLJRjMFx">&ndash;</td><td data-page-node-id="2qAXf65824p6BJeY6ATkEk">&ndash;</td><td data-page-node-id="dYHjBGiwyX7a41GlQd5nDS">&ndash;</td><td data-page-node-id="9LyNSmGw4nac7G3eLOQEEx">&ndash;</td><td data-page-node-id="BrznVSftHCkzNghQBuNRnS">&ndash;</td></tr>
+          <tr data-page-node-id="H5XksCdiw3FGClTeGBr8oy"><td rowspan="2" data-page-node-id="196o32KmK8erKhZcljmsZu">Campus</td><td data-page-node-id="7H0V3tnIaco3I6IFS41ANI">DLO</td><td data-page-node-id="ojQtwbPB30FKoeGJ0gDGko">&ndash;</td><td data-page-node-id="5ZTw4RPgkOVIiPDvIZds2f">&ndash;</td><td data-page-node-id="qP4ugfUZHhTfppBqrnDxym">&ndash;</td><td data-page-node-id="CUewhRT8AGMfaCEyRq54kR">&ndash;</td><td data-page-node-id="XEv1CjIjxBxiHtgOtZvfkC">&ndash;</td><td data-page-node-id="GaqyHjhr2rHcbQnBaUo8e1"><b data-page-node-id="CCIOxQmFIeRBEnqa1VdXgs">0.014</b></td></tr>
+          <tr data-page-node-id="sIpsYjVSvBNflNtC1IxJWL"><td data-page-node-id="FOtbqGFUqXOdFmJc9UzAZB">Livox Mapping</td><td data-page-node-id="lfObzWdiUShL1XLjzLQzig">19.94</td><td data-page-node-id="2LlwGrrYaWVjO8hr7EiQbU">0.14</td><td data-page-node-id="d9AQ9Y5FOAOc9vgognMKRF">44.18</td><td data-page-node-id="uWDYDJuAEoh5LzPtChUGXB">0.56</td><td data-page-node-id="iwYdscq8QBA7CVknKCrmc6">0.47</td><td data-page-node-id="0HOWAnr5kHJSdvYGtj0hPt">0.083</td></tr>
+          <tr data-page-node-id="NbywyT5nhdWEvT9vSksj5W"><td rowspan="2" data-page-node-id="keSF5DsLRlNuHXRi6scbRY">Road</td><td data-page-node-id="N5OLUenKbG3BJ7F6Y3irWD">DLO</td><td data-page-node-id="ya2NSgV43U0M52DGgfDCes">&ndash;</td><td data-page-node-id="A4GMtBmSMa4zEAo0rtkoWk">&ndash;</td><td data-page-node-id="K9wBaDSBK56C0YZ8WcmsuM">&ndash;</td><td data-page-node-id="ANyIrAPDkLZsB0SPc2ADYj">&ndash;</td><td data-page-node-id="Fh7IvUzWFGfdjpGfGx0XlQ">&ndash;</td><td data-page-node-id="ISb6B7p5ttR03s8aT9mA7r">0.028</td></tr>
+          <tr data-page-node-id="DuALmB3ZuHdcTX9yyTdA8a"><td data-page-node-id="aAnBjLiqwCEiG8sovowyDQ">Livox Mapping</td><td data-page-node-id="hytjOrYfhkiBnXl04gEVt4">180.91</td><td data-page-node-id="oNwdxy1221iceb2BuL2WaD">0.37</td><td data-page-node-id="BlFyhKoCTP6qch0HF7rLjx">113.92</td><td data-page-node-id="H6sP3bkcVhYGBBOinTnVUp">1.03</td><td data-page-node-id="QhCHpsHbH3wrsLHEOhCqQP">0.45</td><td data-page-node-id="pt63qTcPFEQB5VwLLHgy7B"><b data-page-node-id="41QIyfTZE1qs59W6DL4s9m">0.018</b></td></tr>
+        </tbody>
+      </table>
+      <p class="table-note" data-page-node-id="RENz4r5gVENFEgaFJs5mZ4"><b data-page-node-id="XA0WiEyxWamPTonlDu2RfH">Table 1.</b> Quantitative comparison on the three sequences. On Road, Livox Mapping yields a large APE (180.91 m) yet a low MLSD (0.018), while on Campus the opposite holds &mdash; MLSD measures local structural distortion rather than global pose error, complementing conventional metrics. Dashes: not applicable or no usable map.</p>
+    </div>
+
+    <div class="block table-wrap" data-page-node-id="BCpx4X7cTh5X307WS3xpc2">
+      <table data-page-node-id="ztLz5MmuqOiLYoCxG8WnZG">
+        <thead data-page-node-id="qDyvb8GGlH8yEV8mTus0mU">
+          <tr data-page-node-id="Sd2TH5eiv4FxatTydpmu8j"><th data-page-node-id="3wn7bDjO0fY0AokskFtsSc">Sequence</th><th data-page-node-id="IOBbymFYN4C7KUu3NWGYfw">No. of trials</th><th data-page-node-id="mrwDhAo6xnPzKGVE6o2X7c">Mean MLSD</th><th data-page-node-id="0MyKKPxEByQNkaGpkj3qfa">Std</th><th data-page-node-id="3dnU9adZrJbKK6zKUbaubB">CV (%)</th></tr>
+        </thead>
+        <tbody data-page-node-id="JD2xpmHMFFAyLpTNB2ueGy">
+          <tr data-page-node-id="5dY7iwY316iDbW9kHoX1nl"><td data-page-node-id="b4xjRdoAWpttkLQubIGX9x">Backpack2025 Seq.2</td><td data-page-node-id="G2E7SdgSZHoyCNAUDwDxBT">30</td><td data-page-node-id="MrVa36d9tbqqPuVGBU2PZK">0.02654</td><td data-page-node-id="HfF3OTH4NWpcXDGHYdQLz1">0.00185</td><td data-page-node-id="NDxgH8q7Acr8vHafZH6y2Z">6.97</td></tr>
+          <tr data-page-node-id="BYo0IRHYzOM2S91pkvrl90"><td data-page-node-id="I0ZP3rhGfnWT7axMzIpcpE">Campus</td><td data-page-node-id="vMh9MtjIXWhrRGWYTwF2Ir">30</td><td data-page-node-id="HoGm9ZEUhY22BGJzEGePTF">0.01279</td><td data-page-node-id="sSnzbmriczPudKgn4EQQ69">0.00104</td><td data-page-node-id="N93WVRNNjCjNjSCBQ18HL0">8.16</td></tr>
+          <tr data-page-node-id="y8vRdUylVrArJOZyCvcYsr"><td data-page-node-id="LxUZm4XXr2sHFXKD51KJVM">Road</td><td data-page-node-id="VD6tmiEc1dd1rivQveQpmU">30</td><td data-page-node-id="AgD2XLGAIgKF7Xg3h1qrB6">0.02843</td><td data-page-node-id="Bgnw74tvqzeORKS7G8CBP2">0.00239</td><td data-page-node-id="A5flxd2NRtCmJzdVjVHxZF">8.40</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note" data-page-node-id="OYK2VzgmtpYdqW752Ihrb0"><b data-page-node-id="NMa6pRNsyKnAkkHt9htfla">Table 2.</b> Repeatability of MLSD across 30 repeated correspondence annotations per sequence (CV &lt; 9% on all sequences).</p>
+    </div>
+  </div>
+
+  <!-- ===================== Citation ===================== -->
+  <div class="section" data-page-node-id="LIMWDasH913Gnz2JyO2I0x">
+    <h2 data-page-node-id="PhVp6W4WVPXMoKi1jyITfZ">Citation</h2>
+    <div class="bibtex" data-page-node-id="MsCLn9b3Fi8P3doVdKEOsd">@article{ma2026mlsd,
+  title   = {Weak-Reference Structural Distortion Evaluation for SLAM
+             Point Cloud Maps via Satellite-Guided Local Scale Analysis},
+  author  = {Ma, Yunfei and Cheng, Jun},
+  journal = {Preprint submitted to Elsevier},
+  year    = {2026}
+}</div>
+  </div>
+
+</div>
+
+</body>
+</html>
