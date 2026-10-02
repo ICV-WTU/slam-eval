@@ -128,6 +128,8 @@
     .two-col > div { flex: 1; }
     .two-col .card { flex: 1; display: flex; flex-direction: column; }
     .two-col .card img { flex: 0 0 auto; }
+    /* push the (a)/(b) labels to the card bottom so they align across columns */
+    .two-col .card .sublabel { margin-top: auto; padding-top: 8px; }
 
     .three-col { display: flex; gap: 14px; align-items: stretch; }
     .three-col > div { flex: 1; }
@@ -176,27 +178,49 @@
       margin-top: 5px;
     }
 
-    /* qualitative: one column per sequence, overlay over heatmap */
+    /* qualitative: one ROW per figure type, three sequences side by side.
+       Rows are shared, so images with different aspect ratios stay
+       vertically centred and the row labels always line up. */
     .qual-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    .qual-col { margin: 0; }
-    .qual-col .seq-name {
+    .qual-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      align-items: center;
+    }
+    .qual-row.seq-row { align-items: end; }
+    .qual-row .seq-name {
       text-align: center;
       font-size: 0.85rem;
       font-weight: 600;
       color: var(--text);
-      margin-bottom: 8px;
+      margin: 0;
     }
-    .qual-col img { width: 100%; display: block; border-radius: 3px; }
-    .qual-col img + img { margin-top: 8px; }
-    .qual-col .img-tag {
+    .qual-row .img-tag {
       font-size: 0.78rem;
       color: var(--muted);
       text-align: center;
-      margin: 4px 0 0;
+      margin: 0;
+    }
+    /* fixed-aspect box: image is scaled to fit and centred, never cropped */
+    .img-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 2.15 / 1;
+    }
+    .qual-row.heat .img-box { aspect-ratio: 2.6 / 1; }
+    .img-box img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      display: block;
+      border-radius: 3px;
     }
 
     .bibtex {
@@ -210,7 +234,8 @@
       line-height: 1.55;
     }
     @media (max-width: 700px) {
-      .two-col, .three-col, .qual-grid { flex-direction: column; grid-template-columns: 1fr; }
+      .two-col, .three-col { flex-direction: column; }
+      .qual-row { grid-template-columns: 1fr; gap: 8px; }
       .map-grid { grid-template-columns: 1fr; }
       header h1 { font-size: 1.35rem; }
     }
@@ -221,10 +246,11 @@
 <div class="container" data-page-node-id="fmG40NwCGOldT8GucsFsZ1">
 
   <header data-page-node-id="qssN70st5RBbN4O92cmUjD">
-    <h1 data-page-node-id="gbjkt6lvSTMqoYtqB6YoEN">Weak-Reference Structural Distortion Evaluation for SLAM Point Cloud Maps via Satellite-Guided Local Scale Analysis</h1>
+    <h1 data-page-node-id="gbjkt6lvSTMqoYtqB6YoEN">Satellite-Guided Assessment of Structural Distortion in SLAM Point Cloud Maps</h1>
 
     <div class="authors" data-page-node-id="9hzQpQ4ysKfXHf5uq1xPl8">
-      <span data-page-node-id="DuBvUzVHQb8FgJkCyBjTNz"><a href="mailto:" data-page-node-id="4hRxs8b8cArpGt6o7ZIGOB">Yunfei Ma</a><sup data-page-node-id="fZfX90QUkVmHhC0GRADJHR">1</sup></span>
+      <span data-page-node-id="DuBvUzVHQb8FgJkCyBjTNz"><a href="mailto:2415063017@wtu.edu.cn" data-page-node-id="4hRxs8b8cArpGt6o7ZIGOB">Yunfei Ma</a><sup data-page-node-id="fZfX90QUkVmHhC0GRADJHR">1</sup></span>
+      <span data-page-node-id="DuBvUzVHQb8FgJkCyBjTNz"><a href="mailto:" data-page-node-id="4hRxs8b8cArpGt6o7ZIGOB">Gan Zou</a><sup data-page-node-id="fZfX90QUkVmHhC0GRADJHR">1</sup></span>
       <span data-page-node-id="X9o9HC7ldoa2IErLnFdqES"><a href="mailto:jcheng@wtu.edu.cn" data-page-node-id="ECeAsbndJ7yA9LCEmJlkAM">Jun Cheng</a><sup data-page-node-id="gVFkb6zibSIIystV0ZCEgo">1,2</sup></span>
     </div>
 
@@ -233,23 +259,15 @@
     </div>
 
     <div class="buttons">
-      <a class="button" href="#"><span class="icon">&#128230;</span>Dataset</a>
-      <a class="button" href="#"><span class="icon">&#128187;</span>Code</a>
-      <!-- 数据集/代码链接就绪后，把上面 href="#" 换成对应网址即可 -->
+      <a class="button" href="https://drive.google.com/file/d/1UlkYz0kKReFsDZU5adD7K9bRvTFB4xi6/view?usp=drive_link">Dataset</a>
+      <a class="button" href="https://github.com/ICV-WTU/slam_eval">Github</a>
     </div>
   </header>
 
   <!-- ===================== Teaser ===================== -->
   <div class="block" data-page-node-id="Ss7qMFUZL2dUIqPA3bsh1X">
-    <div class="two-col" data-page-node-id="EYbDhotjslMzZWJPWCN7jq">
-      <div class="card" data-page-node-id="gZ0dQwLYATKhGItZUzNc46">
-        <img class="full" src="static/images/fig1a_problems.jpg?v=4" alt="Case 1 and Case 2" data-page-node-id="WFOYLor2VvZ3vzUBI45eaH">
-        <p class="sublabel" data-page-node-id="uWmK9OncqApSAjxRBn51yC"><b data-page-node-id="I6tgSMPkZNV155cmOdmyHg">(a)</b></p>
-      </div>
-      <div class="card" data-page-node-id="nYJxG485VrHmOx0HDwgr2j">
-        <img class="full" src="static/images/fig1b_problems.jpg?v=4" alt="GT unavailable in large areas" data-page-node-id="UIDpkRQBrPqrOL353b8yfw">
-        <p class="sublabel" data-page-node-id="XLJmoXZe9xyUs8r5RH7Sxn"><b data-page-node-id="sKsdtHUr4QRHUYGKQNrvnH">(b)</b></p>
-      </div>
+    <div class="card" data-page-node-id="gZ0dQwLYATKhGItZUzNc46">
+      <img class="full" src="static/images/fig1_problems.png" alt="Case 1 and Case 2" data-page-node-id="WFOYLor2VvZ3vzUBI45eaH">
     </div>
     <p class="caption" data-page-node-id="Jx3i6bAT9QuSEWzEkVH3UJ"><b data-page-node-id="XFaMhV8woPzw875FZx9kGC">Figure 1.</b> The existing problems in SLAM evaluation: (a) map quality is unrelated to trajectory accuracy (Case 1 vs. Case 2); (b) accurate ground truth is difficult or impossible to obtain in large-scale or open scenarios.</p>
   </div>
@@ -278,15 +296,8 @@
     </div>
 
     <div class="block" data-page-node-id="Gjlm6d9AAJixeXXHjG2Ecy">
-      <div class="map-grid" data-page-node-id="EmjHLj2jKuDbC6k0jVH3H3">
-        <figure class="card" data-page-node-id="azXgYBGJvOZ5qaXCC8edcd"><img src="static/images/map_campus_local_livox.jpg" alt="Campus local, Livox Mapping" data-page-node-id="4tOZaPBEDff0dVNXum0gup"><figcaption data-page-node-id="NZ0q9zoIaZg7rbR8mqY75g">(a) Campus, local (Livox Mapping)</figcaption></figure>
-        <figure class="card" data-page-node-id="LpzbBAFrOsSykftWcrCoV9"><img src="static/images/map_campus_global_livox.jpg" alt="Campus global, Livox Mapping" data-page-node-id="EYEdYEukkpyX8BqBHcAMWd"><figcaption data-page-node-id="kPVkg9QD2f0h9BWX7Atcgk">(b) Campus, global (Livox Mapping)</figcaption></figure>
-        <figure class="card" data-page-node-id="tUhfMgc7sdNVqbbztuqaWK"><img src="static/images/map_campus_local_dlo.jpg" alt="Campus local, DLO" data-page-node-id="9wuWYlXOTD7CwsW4TXVqBY"><figcaption data-page-node-id="P9nbfqALNtidT8QvA6zjWd">(c) Campus, local (DLO)</figcaption></figure>
-        <figure class="card" data-page-node-id="KoAIlzbDMbgWCAO7cdXnSH"><img src="static/images/map_campus_global_dlo.jpg" alt="Campus global, DLO" data-page-node-id="RQHIEXAub472Ez5nKgJgur"><figcaption data-page-node-id="v1WJHobiep6dWzaeUXYjWs">(d) Campus, global (DLO)</figcaption></figure>
-        <figure class="card" data-page-node-id="cS7DDCe974jwhPmABjWazD"><img src="static/images/map_road_local_livox.jpg" alt="Road local, Livox Mapping" data-page-node-id="fDSQjc1C5Ila3wGHe1Xjpb"><figcaption data-page-node-id="NvYfZs4MTViPIUjGSJOFsG">(e) Road, local (Livox Mapping)</figcaption></figure>
-        <figure class="card" data-page-node-id="nJPwXNN5oI62EC75ayiAOr"><img src="static/images/map_road_global_livox.jpg" alt="Road global, Livox Mapping" data-page-node-id="oJezHf71fQLGmhqVU27LsV"><figcaption data-page-node-id="kU3INNWhbSTsGcUbeugWUK">(f) Road, global (Livox Mapping)</figcaption></figure>
-        <figure class="card" data-page-node-id="g0hhx5qAcwiOmzCE7wrOMl"><img src="static/images/map_road_local_dlo.jpg" alt="Road local, DLO" data-page-node-id="TKrAYHenicT3DKDuhQxJSX"><figcaption data-page-node-id="uPdBUAaqYzY5xbm2nMzPdJ">(g) Road, local (DLO)</figcaption></figure>
-        <figure class="card" data-page-node-id="Qen8zYbuPUIhCrCpd7jLgB"><img src="static/images/map_road_global_dlo.jpg" alt="Road global, DLO" data-page-node-id="61qMD98fXvnICRRP2j4BKj"><figcaption data-page-node-id="IjviMBLq8aHFaYxfQVekTp">(h) Road, global (DLO)</figcaption></figure>
+      <div class="card" data-page-node-id="EmjHLj2jKuDbC6k0jVH3H3">
+        <img class="full" src="static/images/page_scene.png" alt="Two Scene" data-page-node-id="4tOZaPBEDff0dVNXum0gup">
       </div>
       <p class="caption" data-page-node-id="jFUFtJ0fqaBVp317FaBQsf"><b data-page-node-id="pMr7ubkBIrvKsgtDbFMrAX">Figure 4.</b> Local maps preserve fine structure, while global maps accumulate scale inconsistency and structural drift.</p>
     </div>
@@ -298,25 +309,34 @@
 
     <div class="block" data-page-node-id="SSfy40kaGwH7OGlHRrzMaD">
       <div class="qual-grid" data-page-node-id="FR93JKVCrr4OQz9WCqyASn">
-        <div class="qual-col" data-page-node-id="1cT9R6Rgv0mLJt6wse67cl">
+        <!-- row 1: sequence names -->
+        <div class="qual-row seq-row">
           <p class="seq-name" data-page-node-id="x9EaKyFFKkOeZDJn6hGCDT">Backpack2025 Seq.2</p>
-          <img src="static/images/qual_overlay_backpack.jpg" alt="Overlay, Backpack" data-page-node-id="jP3umAesQZjKzcdhShrZ9D">
-          <p class="img-tag" data-page-node-id="40ITH2NSamgIt5XKIhd4Ne">Overlay</p>
-          <img src="static/images/qual_heat_backpack.jpg" alt="Heatmap, Backpack" data-page-node-id="ILIvWdx9DZTjyfbzbRTj5K">
-          <p class="img-tag" data-page-node-id="31JKXetGHB5fd5a5QpjqBW">Distortion field</p>
-        </div>
-        <div class="qual-col" data-page-node-id="lIVfNHFYaAAbSF12CztzfQ">
           <p class="seq-name" data-page-node-id="EXyci05qOB1VGPpgPg37OM">Campus</p>
-          <img src="static/images/qual_overlay_campus.jpg" alt="Overlay, Campus" data-page-node-id="MXK9gEkniv7kzw2anbJDcK">
-          <p class="img-tag" data-page-node-id="9BJcLpDyO7uufL0HQ7vTi9">Overlay</p>
-          <img src="static/images/qual_heat_campus.jpg" alt="Heatmap, Campus" data-page-node-id="vyffIk3UFzyqrYQ0f3h7xk">
-          <p class="img-tag" data-page-node-id="C8KOlAAVr7dSQRpQzIpFwi">Distortion field</p>
-        </div>
-        <div class="qual-col" data-page-node-id="8sMoYc0YamGxP5jIwfbAEP">
           <p class="seq-name" data-page-node-id="FC4H8bk3yUHnKJeHz1vuXS">Road</p>
-          <img src="static/images/qual_overlay_road.jpg" alt="Overlay, Road" data-page-node-id="XvDUgIUMAhZfo8OxW2rZnp">
+        </div>
+
+        <!-- row 2: alignment overlays -->
+        <div class="qual-row img-row overlay">
+          <div class="img-box"><img src="static/images/qual_overlay_backpack.jpg" alt="Overlay, Backpack" data-page-node-id="jP3umAesQZjKzcdhShrZ9D"></div>
+          <div class="img-box"><img src="static/images/qual_overlay_campus.jpg" alt="Overlay, Campus" data-page-node-id="MXK9gEkniv7kzw2anbJDcK"></div>
+          <div class="img-box"><img src="static/images/qual_overlay_road.jpg" alt="Overlay, Road" data-page-node-id="XvDUgIUMAhZfo8OxW2rZnp"></div>
+        </div>
+        <div class="qual-row tag-row">
+          <p class="img-tag" data-page-node-id="40ITH2NSamgIt5XKIhd4Ne">Overlay</p>
+          <p class="img-tag" data-page-node-id="9BJcLpDyO7uufL0HQ7vTi9">Overlay</p>
           <p class="img-tag" data-page-node-id="qcmQoZg2yImpHaKfWTj60N">Overlay</p>
-          <img src="static/images/qual_heat_road.jpg" alt="Heatmap, Road" data-page-node-id="kUIApFuaqEARUXjzOcqYZa">
+        </div>
+
+        <!-- row 3: distortion fields -->
+        <div class="qual-row img-row heat">
+          <div class="img-box"><img src="static/images/qual_heat_backpack.jpg" alt="Heatmap, Backpack" data-page-node-id="ILIvWdx9DZTjyfbzbRTj5K"></div>
+          <div class="img-box"><img src="static/images/qual_heat_campus.jpg" alt="Heatmap, Campus" data-page-node-id="vyffIk3UFzyqrYQ0f3h7xk"></div>
+          <div class="img-box"><img src="static/images/qual_heat_road.jpg" alt="Heatmap, Road" data-page-node-id="kUIApFuaqEARUXjzOcqYZa"></div>
+        </div>
+        <div class="qual-row tag-row">
+          <p class="img-tag" data-page-node-id="31JKXetGHB5fd5a5QpjqBW">Distortion field</p>
+          <p class="img-tag" data-page-node-id="C8KOlAAVr7dSQRpQzIpFwi">Distortion field</p>
           <p class="img-tag" data-page-node-id="Bv0tL5i9byzZz9Dlwe2Ea8">Distortion field</p>
         </div>
       </div>
@@ -371,9 +391,8 @@
   <div class="section" data-page-node-id="LIMWDasH913Gnz2JyO2I0x">
     <h2 data-page-node-id="PhVp6W4WVPXMoKi1jyITfZ">Citation</h2>
     <div class="bibtex" data-page-node-id="MsCLn9b3Fi8P3doVdKEOsd">@article{ma2026mlsd,
-  title   = {Weak-Reference Structural Distortion Evaluation for SLAM
-             Point Cloud Maps via Satellite-Guided Local Scale Analysis},
-  author  = {Ma, Yunfei and Cheng, Jun},
+  title   = {Satellite-Guided Assessment of Structural Distortion in SLAM Point Cloud Maps},
+  author  = {Ma, Yunfei et al.},
   journal = {Preprint submitted to Elsevier},
   year    = {2026}
 }</div>
